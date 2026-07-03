@@ -1,0 +1,2 @@
+/usr/bin/ar qc libbacktester_lib.a CMakeFiles/backtester_lib.dir/src/sim_book.cpp.o CMakeFiles/backtester_lib.dir/src/execution_sim.cpp.o CMakeFiles/backtester_lib.dir/src/pnl_tracker.cpp.o CMakeFiles/backtester_lib.dir/src/report.cpp.o CMakeFiles/backtester_lib.dir/src/parity_harness.cpp.o CMakeFiles/backtester_lib.dir/src/live_engine.cpp.o
+/usr/bin/ranlib libbacktester_lib.a

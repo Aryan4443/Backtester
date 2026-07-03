@@ -1,0 +1,207 @@
+{
+  "tests": 33,
+  "name": "AllTests",
+  "testsuites": [
+    {
+      "name": "EventQueue",
+      "tests": 6,
+      "testsuite": [
+        {
+          "name": "PopOrderByTimestamp",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_event_queue.cpp",
+          "line": 23
+        },
+        {
+          "name": "TieBreakBySeq",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_event_queue.cpp",
+          "line": 40
+        },
+        {
+          "name": "TieBreakByDetId",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_event_queue.cpp",
+          "line": 55
+        },
+        {
+          "name": "DeterministicAcrossRuns",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_event_queue.cpp",
+          "line": 77
+        },
+        {
+          "name": "PopEmptyThrows",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_event_queue.cpp",
+          "line": 106
+        },
+        {
+          "name": "SimClockNeverGoesBackward",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_event_queue.cpp",
+          "line": 114
+        }
+      ]
+    },
+    {
+      "name": "SimBook",
+      "tests": 7,
+      "testsuite": [
+        {
+          "name": "BestBidAsk",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_sim_book.cpp",
+          "line": 31
+        },
+        {
+          "name": "MidPrice",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_sim_book.cpp",
+          "line": 52
+        },
+        {
+          "name": "TradeConsumesAsk",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_sim_book.cpp",
+          "line": 62
+        },
+        {
+          "name": "PartialTrade",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_sim_book.cpp",
+          "line": 77
+        },
+        {
+          "name": "DeleteOrder",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_sim_book.cpp",
+          "line": 93
+        },
+        {
+          "name": "MultipleLevels",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_sim_book.cpp",
+          "line": 108
+        },
+        {
+          "name": "ReplayCheckpoints",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_sim_book.cpp",
+          "line": 124
+        }
+      ]
+    },
+    {
+      "name": "ExecutionSim",
+      "tests": 5,
+      "testsuite": [
+        {
+          "name": "MarketOrderFillsBestLevel",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_execution_sim.cpp",
+          "line": 30
+        },
+        {
+          "name": "MarketOrderWalksTwoLevels",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_execution_sim.cpp",
+          "line": 52
+        },
+        {
+          "name": "DelayedOrderMissesPrice",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_execution_sim.cpp",
+          "line": 87
+        },
+        {
+          "name": "LatencySchedulesArrival",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_execution_sim.cpp",
+          "line": 119
+        },
+        {
+          "name": "SellMarketOrder",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_execution_sim.cpp",
+          "line": 139
+        }
+      ]
+    },
+    {
+      "name": "QueuePosition",
+      "tests": 4,
+      "testsuite": [
+        {
+          "name": "FillsAfterVolumeTradesThrough",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_queue_position.cpp",
+          "line": 28
+        },
+        {
+          "name": "TradeAtDifferentPriceIgnored",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_queue_position.cpp",
+          "line": 80
+        },
+        {
+          "name": "FIFOCancelDoesNotAdvance",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_queue_position.cpp",
+          "line": 107
+        },
+        {
+          "name": "CancelOwnOrder",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_queue_position.cpp",
+          "line": 137
+        }
+      ]
+    },
+    {
+      "name": "PnLTracker",
+      "tests": 6,
+      "testsuite": [
+        {
+          "name": "BuySellZeroPnL",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_pnl.cpp",
+          "line": 20
+        },
+        {
+          "name": "BuyLowSellHigh",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_pnl.cpp",
+          "line": 33
+        },
+        {
+          "name": "UnrealizedPnL",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_pnl.cpp",
+          "line": 46
+        },
+        {
+          "name": "SlippageAccumulation",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_pnl.cpp",
+          "line": 59
+        },
+        {
+          "name": "PartialFills",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_pnl.cpp",
+          "line": 72
+        },
+        {
+          "name": "MultipleRoundTrips",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_pnl.cpp",
+          "line": 84
+        }
+      ]
+    },
+    {
+      "name": "ParityHarness",
+      "tests": 5,
+      "testsuite": [
+        {
+          "name": "NullStrategyParityOK",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_parity_harness.cpp",
+          "line": 118
+        },
+        {
+          "name": "OneShotStrategyParityOK",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_parity_harness.cpp",
+          "line": 132
+        },
+        {
+          "name": "HashIsSensitiveToOrder",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_parity_harness.cpp",
+          "line": 145
+        },
+        {
+          "name": "HashIsIdempotent",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_parity_harness.cpp",
+          "line": 162
+        },
+        {
+          "name": "LookAheadProducesDifferentDecisions",
+          "file": "\/Users\/aryanlakhani\/Desktop\/Backtester\/tests\/test_parity_harness.cpp",
+          "line": 181
+        }
+      ]
+    }
+  ]
+}

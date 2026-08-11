@@ -27,7 +27,7 @@ tests/                GoogleTest suite
 - C++20 compiler (Apple Clang / GCC / Clang)
 - GoogleTest (fetched automatically by CMake)
 
-For `live_trader` only: a sibling (or configured) [feed handler](https://github.com/) project that provides the `feedhandler` CMake target and `include/feedhandler/` headers. On this machine that is typically the Desktop folder `order book engine`.
+For `live_trader` only: a sibling (or configured) feed-handler project that provides the `feedhandler` CMake target and `include/feedhandler/` headers (e.g. a Desktop folder named `order book engine`).
 
 ## Build (core)
 

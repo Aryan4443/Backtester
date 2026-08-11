@@ -37,6 +37,9 @@
 //   Pass the ticker as a string (e.g. "AAPL"). The adapter upper-cases it
 //   and pads to 8 chars to match the MarketEvent.symbol field (ITCH
 //   right-space-pads tickers). Empty string = accept all symbols.
+//   Filter is applied AFTER sequencing, and only for Add/Trade (the ITCH
+//   types that carry a symbol). Execute/Cancel/Delete/Replace have no
+//   symbol on the wire and are applied via the order-ref cache.
 //
 // ---- Price conversion ----
 //   fh: 4-decimal fixed-point  ($100.00 = 1,000,000 ticks, /10000 → $)
@@ -81,21 +84,19 @@ public:
         while (channel_.receive(msg)) {
             const fh::MarketEvent& me = msg.event;
 
-            // Symbol filter (compare against right-space-padded char[8])
-            if (has_sym_filter_ && std::memcmp(me.symbol, sym_filter_.data(), 8) != 0)
-                continue;
-
-            // Sequencer: gap detection + delta replay
+            // Sequencer MUST see every frame sequence (file/live ring order).
+            // Do NOT symbol-filter before offer(): ITCH Execute/Cancel/Delete/Replace
+            // carry no symbol — skipping them opens fake gaps and starves the book.
             auto disp = seq_.offer(msg.sequence, me);
 
             switch (disp) {
                 case fh::Disposition::Apply:
-                    translate(me, out);
+                    maybe_translate(me, out);
                     // Drain any buffered events that are now contiguous
                     {
                         fh::MarketEvent buffered;
                         while (seq_.pop_ready(buffered))
-                            translate(buffered, out);
+                            maybe_translate(buffered, out);
                     }
                     break;
 
@@ -112,7 +113,7 @@ public:
                     // The sequencer sets needs_snapshot_; we synthesise a resync
                     // at the current sequence so the stream stays usable.
                     seq_.resync_to_snapshot(msg.sequence);
-                    translate(me, out);
+                    maybe_translate(me, out);
                     break;
             }
         }
@@ -148,6 +149,22 @@ private:
     std::unordered_map<uint64_t, OrderInfo> orders_;
 
     // ---- helpers ----
+
+    // Symbol filter applies only to wire messages that carry a stock field.
+    // Order-lifecycle msgs (E/C/X/D/U) have no symbol; translate() uses the
+    // order-ref cache so foreign-symbol refs are no-ops.
+    bool should_translate(const fh::MarketEvent& me) const noexcept {
+        if (!has_sym_filter_) return true;
+        using ET = fh::EventType;
+        if (me.type == ET::Add || me.type == ET::Trade)
+            return std::memcmp(me.symbol, sym_filter_.data(), 8) == 0;
+        return true;
+    }
+
+    void maybe_translate(const fh::MarketEvent& me, std::vector<Event>& out) {
+        if (should_translate(me))
+            translate(me, out);
+    }
 
     static std::array<char,8> make_sym_filter(const std::string& sym) {
         std::array<char,8> out;

@@ -1,0 +1,8 @@
+build/
+build-*/
+build-live/
+build-live-a/
+build-live-b/
+_deps/
+*.a
+.DS_Store

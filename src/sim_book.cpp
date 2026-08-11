@@ -154,7 +154,8 @@ std::vector<Level> SimBook::bid_levels(int n) const {
     out.reserve(static_cast<std::size_t>(n));
     for (auto& [p, l] : bids_) {
         if (static_cast<int>(out.size()) >= n) break;
-        out.push_back(l);
+        // Snapshot price/qty only — do not copy per-order maps (can be huge).
+        out.push_back(Level{l.price, l.total_qty, {}});
     }
     return out;
 }
@@ -164,7 +165,7 @@ std::vector<Level> SimBook::ask_levels(int n) const {
     out.reserve(static_cast<std::size_t>(n));
     for (auto& [p, l] : asks_) {
         if (static_cast<int>(out.size()) >= n) break;
-        out.push_back(l);
+        out.push_back(Level{l.price, l.total_qty, {}});
     }
     return out;
 }

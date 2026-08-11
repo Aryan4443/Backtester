@@ -12,6 +12,7 @@
 //               [--max-pos <N>]          default 100
 //               [--hard-floor <dollars>] default -1000
 //               [--output <report.md>]
+//               [--strategy mid_cross|warmup_take]  default warmup_take
 //               [--verbose]
 
 #include "backtester/spsc_feed_adapter.hpp"
@@ -20,6 +21,7 @@
 #include "backtester/live_engine.hpp"
 #include "backtester/report.hpp"
 #include "strategies/mid_cross_strategy.hpp"
+#include "strategies/warmup_take_strategy.hpp"
 
 // ---- feed handler project ----
 #include <feedhandler/pipeline.hpp>          // fh::PipelineMsg, fh::kRingCapacity
@@ -47,6 +49,7 @@ static void usage() {
         << "         [--max-pos <N>]          default 100\n"
         << "         [--hard-floor <dollars>] default -1000\n"
         << "         [--output <report.md>]\n"
+        << "         [--strategy mid_cross|warmup_take]  default warmup_take\n"
         << "         [--verbose]\n";
 }
 
@@ -55,6 +58,7 @@ int main(int argc, char** argv) {
     std::string  itch_file;
     Timestamp    latency_ns  = 50'000;
     std::string  output_file;
+    std::string  strategy_name = "warmup_take";
     bool         verbose     = false;
     RiskLimits   risk_limits;
 
@@ -65,6 +69,7 @@ int main(int argc, char** argv) {
         else if (std::strcmp(argv[i], "--max-pos")    == 0 && i+1 < argc) risk_limits.max_position     = std::stoll(argv[++i]);
         else if (std::strcmp(argv[i], "--hard-floor") == 0 && i+1 < argc) risk_limits.hard_floor       = std::stod(argv[++i]);
         else if (std::strcmp(argv[i], "--output")     == 0 && i+1 < argc) output_file                  = argv[++i];
+        else if (std::strcmp(argv[i], "--strategy")   == 0 && i+1 < argc) strategy_name                = argv[++i];
         else if (std::strcmp(argv[i], "--verbose")    == 0)                verbose                      = true;
         else { usage(); return 1; }
     }
@@ -80,14 +85,22 @@ int main(int argc, char** argv) {
     // ----------------------------------------------------------------
     SpscFeedAdapter<Chan> adapter(channel, symbol);
     PaperOrderRouter      router(latency_ns);
-    MidCrossStrategy      strategy(20, 0.0005);
     RiskCheck             risk(risk_limits);
+
+    // mid_cross needs several bps of mid move; itch_gen tape is flat ~$100,
+    // so default to warmup_take for a visible end-to-end smoke test.
+    MidCrossStrategy   mid_cross(20, 0.0005);
+    WarmupTakeStrategy warmup_take(50, 1);
+    Strategy* strategy = nullptr;
+    if (strategy_name == "mid_cross")       strategy = &mid_cross;
+    else if (strategy_name == "warmup_take") strategy = &warmup_take;
+    else { std::cerr << "unknown --strategy " << strategy_name << "\n"; usage(); return 1; }
 
     LiveEngineConfig cfg;
     cfg.verbose         = verbose;
     cfg.equity_sample_n = 500;
 
-    LiveEngine engine(adapter, router, strategy, risk, cfg);
+    LiveEngine engine(adapter, router, *strategy, risk, cfg);
 
     // ----------------------------------------------------------------
     // 3. Thread A: ingest pipeline.
@@ -151,7 +164,7 @@ int main(int argc, char** argv) {
     // 5. Report.
     // ----------------------------------------------------------------
     auto rd = make_report_data(
-        engine.pnl(), "mid_cross(" + symbol + ")", itch_file,
+        engine.pnl(), strategy_name + "(" + symbol + ")", itch_file,
         /*start_ns=*/0, engine.clock().now(),
         latency_ns, engine.order_count(), engine.book().mid_price());
 
